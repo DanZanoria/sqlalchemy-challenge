@@ -1,3 +1,3 @@
-# "**sqlalchemy-challenge**"
+# **Sqlalchemy Challenge** :sunny:
 -----
 
