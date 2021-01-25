@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[11]:
+# In[93]:
 
 
 #Creating the app.py through jupyter. For my benefit. Will convert later
@@ -20,7 +20,7 @@ from sqlalchemy import create_engine, func, inspect
 from dateutil.relativedelta import relativedelta
 
 
-# In[12]:
+# In[94]:
 
 
 #prepare the engine and the reflection. 
@@ -30,14 +30,14 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 
-# In[13]:
+# In[95]:
 
 
 # View all of the classes that automap found
 Base.classes.keys()
 
 
-# In[14]:
+# In[96]:
 
 
 # Save references to each table
@@ -45,7 +45,7 @@ measurement = Base.classes.measurement
 station = Base.classes.station
 
 
-# In[15]:
+# In[97]:
 
 
 # so now the preparation is done. Lets create the flask server
@@ -53,7 +53,7 @@ station = Base.classes.station
 ClimateApp = Flask(__name__)
 
 
-# In[16]:
+# In[98]:
 
 
 # Creating the routes. Lets create the first route
@@ -71,7 +71,7 @@ def welcome():
     )
 
 
-# In[17]:
+# In[112]:
 
 
 #create the precipation route
@@ -80,40 +80,24 @@ session = Session(engine)
 # Convert the query results to a dictionary using `date` as the key and `prcp` as the value.
 # Return the JSON representation of your dictionary.
    
+
+
 Pdata = []
-
-
 @ClimateApp.route("/api/v1.0/precipitation")
 def precipitation():
-   """ Have the most year weather and precipitation"""
    #Copying what i did from the starter
-   twelvemonths = dt.date(2017, 8, 23) - relativedelta(years=1)
-   results = session.query(measurement.date,  measurement.prcp).       filter(measurement.date >= twelvemonths).order_by(measurement.date.asc()).all()
-   for date, prcp in results:
-       pdict = {}
-       pdict[date] = prcp 
-       Pdata.append(pdict)
-       return jsonify(Pdata)
+    twelvemonths = dt.date(2017, 8, 23) - relativedelta(years=1)
+    results = session.query(measurement.date,  measurement.prcp).       filter(measurement.date >= twelvemonths).order_by(measurement.date.asc()).all()
 
-session.close()
-
-
-
-
-# In[18]:
-
-
+    for date, prcp in results:
+        pdict = {}
+        pdict[date] = prcp 
+        Pdata.append(pdict)
+    return jsonify(Pdata)
+    # return Pdata
 print(Pdata)
 
 
-# In[ ]:
 
-
-
-
-
-# In[ ]:
-
-
-
-
+if __name__ == '__main__':
+    ClimateApp.run(debug=True)
