@@ -96,5 +96,31 @@ def stations():
 
 session.close()
 
+
+session = Session(engine)
+Tempcap = []
+@ClimateApp.route("/api/v1.0/tobs")
+def tobs():
+    #Get a count for all the stations activity
+    ACstation = session.query(measurement.station, func.count(measurement.station)).\
+        group_by(measurement.station).order_by( func.count(measurement.station).desc()).all()
+    
+    #Whats the most active and Least Active Station
+    MactiveS = ACstation[0][0]
+    LactiveS = ACstation[8][0]
+    print(f"The most active station is " + MactiveS + ". ")
+    print(f"The least active station is " + LactiveS + ". ")
+
+    #Do a query to get the temperature Data of the most active station
+    twelvemtemp = session.query(measurement.station, measurement.date, measurement.tobs).filter(measurement.station == MactiveS, measurement.date > twelvemonths).order_by(measurement.date).all()
+
+    #Capture the data
+    for date, tobs in twelvemtemp:
+        TdCap = {}
+        TdCap[date] = prcp 
+        TdCap.append(Tempcap)
+    return jsonify(Pdata)
+    # return Pdata
+session.close()
 if __name__ == '__main__':
     ClimateApp.run(debug=True)
