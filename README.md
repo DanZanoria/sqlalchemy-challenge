@@ -14,7 +14,7 @@
 ## Temperature
 
 ### Picture of the Data for temperature from 8/23/16 - 8/23/17
-![Recent Temp](Images/recent.png)
+![Recent Temp](Images/recenttemp.png)
 
 ### The histogram for the temperature from 8/23/16 - 8/23/17
 ![Temperature Chart](Images/Templot.png)
