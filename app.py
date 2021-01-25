@@ -96,6 +96,8 @@ def stations():
 
 session.close()
 
+#create a new session, create the tobs route
+#Like the precipitation route, this is mostly copy and paste from the starter. If done correctly.
 
 session = Session(engine)
 Tempcap = []
@@ -112,15 +114,19 @@ def tobs():
     print(f"The least active station is " + LactiveS + ". ")
 
     #Do a query to get the temperature Data of the most active station
-    twelvemtemp = session.query(measurement.station, measurement.date, measurement.tobs).filter(measurement.station == MactiveS, measurement.date > twelvemonths).order_by(measurement.date).all()
+    twelvemonths = dt.date(2017, 8, 23) - relativedelta(years=1)
+    #Im just redoing twelvemonths. Because i got an error it the variable didnt exist. I think I made twelvemeonths only available for PRCP.
+    twelvemtemp = session.query(measurement.date,  measurement.tobs).filter(measurement.date >= twelvemonths).order_by(measurement.date.asc()).all()
+    #my code in starter for twelvemtemp didnt work so i just resuse the prcp code. And it works. I think the code i had in starter had too many functions.
 
     #Capture the data
-    for date, tobs in twelvemtemp:
+    for date, temperature in twelvemtemp:
         TdCap = {}
-        TdCap[date] = prcp 
-        TdCap.append(Tempcap)
-    return jsonify(Pdata)
+        TdCap[date] = temperature
+        Tempcap.append(TdCap)
+    return jsonify(Tempcap)
     # return Pdata
 session.close()
+
 if __name__ == '__main__':
     ClimateApp.run(debug=True)
