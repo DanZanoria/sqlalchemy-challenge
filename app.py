@@ -128,19 +128,41 @@ def tobs():
     # return Pdata
 session.close()
 
-
-session = Session(engine)
-StartCap = []
+#setting up the start page
 @ClimateApp.route("/api/v1.0/start")
 
-def begin(startdate = 0):
-
-    STDStats = session.query(func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs)).\
-        filter(measurement.date >= startdate).all()
+def alpha(alpha = 0):
+   
+    #Return the minimun, maximum, and average temperature
+    STDStats = session.query(func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs)).filter(measurement.date > alpha).all()
     
+    #jsonify the result
     return jsonify(STDStats)
     
 session.close()
+
+@ClimateApp.route("/api/v1.0/end")
+def alphaomega (alpha = 0, omega = 0):
+
+    #this is a copy and past of the prevvious line. But I dont know what im doing.
+
+  
+    alpha = session.query(measurement.date).order_by(measurement.date).first()
+    omega = session.query(measurement.date).order_by(measurement.date.desc()).first()
+    # print(alpha, omega)   
+
+    #I cannot figure this out. If i copy with what i on start, i would get null, and do anything else i get errors thats not consistent.
+    #The only constency is that its somewhere in the STDA variable. Which is the crux of the homework
+    #I tried creating a variable for alpha and omega, I tried making them = 0, only overrite them.
+    # No matter what I do i cannot get anything
+
+    STDA = session.query(func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs)).\
+        filter(measurement.date < omega).\
+        filter(measurement.date > alpha).all()    
+    return jsonify(STDA)
+    
+session.close()
+
 
 if __name__ == '__main__':
     ClimateApp.run(debug=True)
